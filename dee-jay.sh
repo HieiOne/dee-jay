@@ -2,9 +2,10 @@
 ##########################################################################################
 # Name: dee-jay <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 2.1.9-rc/stable
+# Version: 2.1.10-rc/stable
 # Description:
 #              AI plays music for you from given folder using cvlc(vlc)
+#	       To pause the reproduction just press 'CTRL+Z' to resume it you just have to type "%1" or the number terminal gives you
 # Bugs:
 #	       None found yet!
 ##########################################################################################
@@ -15,15 +16,17 @@ FOLDER=("/mnt/data/MUSICA") #Add your folders here (I find the files recursively
 function rmusic { #main function
 	cvlc -q "$1" 2>/dev/null &
 	echo;echo "${yellow}PLAYING $2"
-	SECONDS=0
-	while [[ $SECONDS -le $3 ]]
+	TIME=0
+	while [[ $TIME -le $3 ]]
 	do
-		echo -ne "${blond}${red}TIME: ${yellow}$SECONDS | $3${reset}"\\r
+		echo -ne "${blond}${red}TIME: ${yellow}$TIME | $3${reset}"\\r
 		read -s -n1 -t 0.001 KEY 2>/dev/null #Silent mode, nchars mode, timeout
                 if [[ $KEY = $'\e' ]]; then #If escape is detected, switches song
 			check-choice "$4"
 			break
                 fi
+		sleep 0.999
+		TIME=$(($TIME+1))
 	done
 	echo;echo;echo "Song $2 finished";echo
 	check-choice "$4"
