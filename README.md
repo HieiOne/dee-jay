@@ -2,7 +2,7 @@
 
 * **Author:** Hiei <blascogasconiban@gmail.com>
 
-* **Version:** 2.0b
+* **Version:** 2.1.5-rc/stable
 
 * **Description:**
               Plays random music from given folder using cvlc(vlc)
