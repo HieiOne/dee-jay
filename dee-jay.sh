@@ -65,7 +65,7 @@ function menu { #menu function
 	esac
 }
 
-#dependences
+#dependencies
 if [[ -z $(dpkg -l | grep "mp3info") ]]; then
 	read -p "${red}mp3info not installed, wish to install it now?[n/y] " ANSWER
 	if [[ $ANSWER = "y" ]] || [[ $ANSWER = "Y" ]]; then
