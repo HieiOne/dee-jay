@@ -6,3 +6,6 @@
 
 * **Description:**
               Plays random music from given folder using cvlc(vlc)
+
+* **USAGE:**
+1. SMD
