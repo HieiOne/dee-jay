@@ -2,10 +2,10 @@
 
 * **Author:** Hiei <blascogasconiban@gmail.com>
 
-* **Version:** 2.1.5-rc/stable
+* **Version:** 2.1.9-rc/stable
 
 * **Description:**
-              Plays random music from given folder using cvlc(vlc)
+              AI plays music for you from given folder using cvlc(vlc)
 
 * **USAGE:**
 
