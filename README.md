@@ -1,6 +1,6 @@
-****Name:**** Random Music <-> rmusic
+**Name:** Random Music <-> rmusic
 
-Author: Hiei <blascogasconiban@gmail.com>
+****Author:**** Hiei <blascogasconiban@gmail.com>
 
 Version: 2.0b
 
