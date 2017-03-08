@@ -1,4 +1,4 @@
-Name: Random Music <-> rmusic
+****Name:**** Random Music <-> rmusic
 
 Author: Hiei <blascogasconiban@gmail.com>
 
