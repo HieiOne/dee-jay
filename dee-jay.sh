@@ -2,15 +2,15 @@
 ##########################################################################################
 # Name: dee-jay <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 2.1.6-rc/stable
+# Version: 2.1.7-rc/stable
 # Description:
 #              Plays random music from given folder using cvlc(vlc)
 # Bugs:
-#	       None found yet!
+#	       Correct dependences with 'mp3info' (apt-get install mp3info)
 ##########################################################################################
 red=`tput setaf 1`;reset=`tput sgr0`;yellow=`tput setaf 3`;bold=`tput bold` #adding colors to the script
 #DEFAULT_CONFIG#
-FOLDER="/mnt/data/MUSICA"
+FOLDER=("/mnt/data/MUSICA" "/mnt/data/MUSICA2") #${FOLDER[*]}
 
 function rmusic { #main function
 	cvlc -q "$1" &
@@ -37,7 +37,7 @@ function check-choice {
         else
 		VLC_PID=$(ps -C vlc | sed 's/|/ /' | awk '{print $1}' | sed -n '2p')
                 kill $VLC_PID
-		echo;SONG=$(find "$FOLDER" -name "*.mp3" -type f | shuf -n1);AUTO=1;song "$SONG" "$AUTO"
+		echo;SONG=$(find ${FOLDER[*]} -name "*.mp3" -type f | shuf -n1);AUTO=1;song "$SONG" "$AUTO"
         fi
 }
 
@@ -57,9 +57,9 @@ function menu { #menu function
 	read -p "${yellow}Which option you want to choose: " OPTION
 	OPTION=$(echo $OPTION | sed 's/[^0-9]//g') #sed to remove non-number characters
 	case $OPTION in
-		1) SONG=$(find "$FOLDER" -name "*.mp3" -type f | shuf -n1);AUTO=1;song "$SONG" "$AUTO" ;; #shuf chooses one randomly
-		2) select SONG in $(find "$FOLDER" -name "*mp3" -type f);do song "$SONG";done ;; #selecting song with select statement
-		3) read -p "Name of song: " SEARCH;select SONG in $(find "$FOLDER" -iname "*$SEARCH*mp3" -type f);do song "$SONG";done ;;
+		1) SONG=$(find ${FOLDER[*]} -name "*.mp3" -type f | shuf -n1);AUTO=1;song "$SONG" "$AUTO" ;; #shuf chooses one randomly
+		2) select SONG in $(find ${FOLDER[*]} -name "*mp3" -type f);do song "$SONG";done ;; #selecting song with select statement
+		3) read -p "Name of song: " SEARCH;select SONG in $(find ${FOLDER[*]} -iname "*$SEARCH*mp3" -type f);do song "$SONG";done ;;
 		4) exit 0 ;;
 		*) echo;echo "${bold}${red}Warning: option not supported${reset}" ; menu ;;
 	esac
