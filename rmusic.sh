@@ -1,89 +1,70 @@
 #!/bin/bash
 ##########################################################################################
-# Name: Random Music <-> rmusic
+# Name: Random Music <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 1.2b
+# Version: 2.1.5-rc/stable
 # Description:
 #              Plays random music from given folder using cvlc(vlc)
-#
-#
+# Bugs:
+#	       None found yet!
 ##########################################################################################
+red=`tput setaf 1`;reset=`tput sgr0`;yellow=`tput setaf 3`;bold=`tput bold` #adding colors to the script
+#DEFAULT_CONFIG#
+FOLDER="/mnt/data/MUSICA"
 
-#COLORS
-red=`tput setaf 1`
-reset=`tput sgr0`
-yellow=`tput setaf 3`
-bold=`tput bold`
-#END_OF_COLORS
-
-function playlist {
-#find /mnt/data/MUSICA -name *.mp3 -printf '%f\n' | awk '{print NR ":" $0}' | shuf -n1 ###Shows List with ID
-song=`find /mnt/data/MUSICA -name *.mp3 | shuf -n 1` #Randomly selecting song from the folder /mnt/data/MUSICA
-duration=`mp3info -p "%m:%02s\n" "$song"` #Checking the duration of the song
-totalduration=`mp3info -p "%S\n" "$song"`
-name=`echo "$song" | rev | cut -d"/" -f1 | cut -c"5-90" | rev | iconv -f utf-8` #Cleaning out the name / Change cut range if too short
-
-cvlc -q "$song" &  #Starts vlc with the randomly selected song
-sleep 0.0001
-pid=`ps -C vlc | sed 's/|/ /' | awk '{print $1}' | sed -n '2p'` #Getting the PID of the VLC Process
-
-printf "\033c" #Cleaning screen
-
-	#INFO
-	echo "${bold}##########################################################################################"
-	echo "${bold}# ${red}${bold}NAME: "${yellow} $name ${reset}${bold}
-	echo "${bold}# ${red}${bold}DURATION: "${yellow} $duration ${reset}${bold}
-	echo "${bold}# ${red}${bold}PID: "${yellow} $pid ${reset}${bold}
-	echo "${bold}#################(\__/)###################################################################"
-	echo "# ~Made by Hiei~ (O.o )"
-	#END_OF_INFO
+function rmusic { #main function
+	cvlc -q "$1" &
+	echo;echo "${yellow}PLAYING $2"
+	SECONDS=0
+	while [[ $SECONDS -le $3 ]]
+	do
+		echo -ne "${blond}${red}TIME: ${yellow}$SECONDS | $3${reset}"\\r
+		read -s -n1 -t 0.001 KEY 2>/dev/null #Silent mode, nchars mode, timeout
+                if [[ $KEY = $'\e' ]]; then #If escape is detected, switches song
+			check-choice "$4"
+			break
+                fi
+	done
+	echo;echo;echo "Song $2 finished";echo
+	check-choice "$4"
 }
 
-function countdown {
-
-#TIMECOUNTER
-(
-echo -ne "#                (> < )"\\n #BUNNY
-while [[ $SECONDS -lt $totalduration ]];
-do
-    num=$SECONDS		#Switch seconds to minutes
-    min=0
-    if((num>59));then
-        ((sec=num%60))
-        ((min=num/60))
-    else
-        ((sec=num))
-    fi
-    echo -ne "${bold}#${red}${bold} TIME: ${yellow}$min:$sec | $duration ${reset}${bold}"\\r${reset} 2>/dev/null #timecounter
-done
-enemy1=`ps -C rmusic.sh | sed 's/|/ /' | awk '{print $1}' | sed -n '4p'` #PID of the controler
-kill $pid
-kill $enemy1 ) & #END_OF_TIMECOUNTER
-
-#CONTROLER
-(
-enemy=`ps -C rmusic.sh | sed 's/|/ /' | awk '{print $1}' | sed -n '3p'` #PID of the timecounter
-while [[ $SECONDS -lt $totalduration ]];
-do
-	read -s -n1 -t 0.001 key 2>/dev/null #Silent mode, nchars mode, timeout
-		if [[ $key = $'\e' ]]; then #If escape is detected, switches song
-			echo "${red}${bold}¡¡¡¡¡¡CHANGING SOUNDTRACK!!!!!!!"${reset}
-			kill $pid
-			kill $enemy #Kills timecounter
-			sleep 0.1
-			exit 1
-		else
-			:
-		fi
-done ) & #END_OF_CONTROLER
-
-wait 2>/dev/null
+function check-choice {
+        if [[ -z $1 ]]; then
+                VLC_PID=$(ps -C vlc | sed 's/|/ /' | awk '{print $1}' | sed -n '2p')
+                kill $VLC_PID
+		echo;menu
+        else
+		VLC_PID=$(ps -C vlc | sed 's/|/ /' | awk '{print $1}' | sed -n '2p')
+                kill $VLC_PID
+		echo;SONG=$(find "$FOLDER" -name "*.mp3" -type f | shuf -n1);AUTO=1;song "$SONG" "$AUTO"
+        fi
 }
 
-#BEGINNING OF SCRIPT
-resize -s 8 91 2>/dev/null #Resizing screen
-playlist
-countdown
-clear
-exec /home/ivan/git/rmusic.sh
-exit 0
+function song { #this function simply sets the vars for the main function
+        SONG="$1"
+        NAME=$(echo "$SONG" | rev | cut -d"/" -f1 | rev | iconv -f utf-8)
+        DURATION=$(mp3info -p "%S" "$SONG")
+        rmusic "$SONG" "$NAME" "$DURATION" "$2"
+}
+
+function menu { #menu function
+	echo;echo "${red} OPTIONS MENU"
+	echo "1.- Play random music from your default mp3 folder"
+	echo "2.- Choose a song from your default mp3 folder"
+	echo "3.- Choose a song from your default mp3 folder with name"
+	echo "4.- Exit" ; echo
+	read -p "${yellow}Which option you want to choose: " OPTION
+	OPTION=$(echo $OPTION | sed 's/[^0-9]//g') #sed to remove non-number characters
+	case $OPTION in
+		1) SONG=$(find "$FOLDER" -name "*.mp3" -type f | shuf -n1);AUTO=1;song "$SONG" "$AUTO" ;; #shuf chooses one randomly
+		2) select SONG in $(find "$FOLDER" -name "*mp3" -type f);do song "$SONG";done ;; #selecting song with select statement
+		3) read -p "Name of song: " SEARCH;select SONG in $(find "$FOLDER" -iname "*$SEARCH*mp3" -type f);do song "$SONG";done ;;
+		4) exit 0 ;;
+		*) echo;echo "${bold}${red}Warning: option not supported${reset}" ; menu ;;
+	esac
+}
+
+IFS=$(echo -en "\n\b") #fixing spaces problem with "select" statement
+menu
+killall -9 vlc;exit 0
