@@ -2,7 +2,7 @@
 ##########################################################################################
 # Name: dee-jay <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 2.1.8-rc/stable
+# Version: 2.1.9-rc/stable
 # Description:
 #              AI plays music for you from given folder using cvlc(vlc)
 # Bugs:
@@ -10,10 +10,10 @@
 ##########################################################################################
 red=`tput setaf 1`;reset=`tput sgr0`;yellow=`tput setaf 3`;bold=`tput bold` #adding colors to the script
 #DEFAULT_CONFIG#
-FOLDER=("/mnt/data/MUSICA" "/mnt/data/MUSICA2") #Add your folders here (I find the files recursively if they are not in different places just mark the main one)
-
+FOLDER=("/mnt/data/MUSICA") #Add your folders here (I find the files recursively if they are not in different places just mark the main one)
+			    #e.g FOLDER=("/mnt/data/MUSICA" "/mnt/data/MUSICA2")
 function rmusic { #main function
-	cvlc -q "$1" &
+	cvlc -q "$1" 2>/dev/null &
 	echo;echo "${yellow}PLAYING $2"
 	SECONDS=0
 	while [[ $SECONDS -le $3 ]]
