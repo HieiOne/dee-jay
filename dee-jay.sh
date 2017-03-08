@@ -2,15 +2,15 @@
 ##########################################################################################
 # Name: dee-jay <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 2.1.7-rc/stable
+# Version: 2.1.8-rc/stable
 # Description:
-#              Plays random music from given folder using cvlc(vlc)
+#              AI plays music for you from given folder using cvlc(vlc)
 # Bugs:
-#	       Correct dependences with 'mp3info' (apt-get install mp3info)
+#	       None found yet!
 ##########################################################################################
 red=`tput setaf 1`;reset=`tput sgr0`;yellow=`tput setaf 3`;bold=`tput bold` #adding colors to the script
 #DEFAULT_CONFIG#
-FOLDER=("/mnt/data/MUSICA" "/mnt/data/MUSICA2") #${FOLDER[*]}
+FOLDER=("/mnt/data/MUSICA" "/mnt/data/MUSICA2") #Add your folders here (I find the files recursively if they are not in different places just mark the main one)
 
 function rmusic { #main function
 	cvlc -q "$1" &
@@ -64,6 +64,18 @@ function menu { #menu function
 		*) echo;echo "${bold}${red}Warning: option not supported${reset}" ; menu ;;
 	esac
 }
+
+#dependences
+if [[ -z $(dpkg -l | grep "mp3info") ]]; then
+	read -p "${red}mp3info not installed, wish to install it now?[n/y] " ANSWER
+	if [[ $ANSWER = "y" ]] || [[ $ANSWER = "Y" ]]; then
+		sudo apt-get install mp3info
+		echo "${yellow}Run dee-jay again";exit 0
+	else
+		echo "${yellow}Can't run without mp3info, try again when you will have it";exit 1
+	fi
+fi
+
 IFS=$(echo -en "\n\b") #fixing spaces problem with "select" statement
 menu
 VLC_PID=$(ps -C vlc | sed 's/|/ /' | awk '{print $1}' | sed -n '2p')
