@@ -2,7 +2,7 @@
 
 * **Author:** Hiei <blascogasconiban@gmail.com>
 
-* **Version:** 2.3.2/stable
+* **Version:** 2.3.3/stable
 
 * **Description:**
               AI plays music for you from given folder using cvlc(vlc)

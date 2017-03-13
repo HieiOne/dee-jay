@@ -2,7 +2,7 @@
 ##########################################################################################
 # Name: dee-jay <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 2.3.2/stable
+# Version: 2.3.3/stable
 # Description:
 #              AI plays music for you from given folder using cvlc(vlc)
 #	       To pause the reproduction just press 'CTRL+Z' to resume it you just have to type "%1" or the number terminal gives you
@@ -14,8 +14,8 @@
 source "$(dirname $0)"/dee-jay.conf
 
 function updater {
-LOCAL=$(git rev-parse @)
-REMOTE=$(git ls-remote origin -h refs/heads/master | cut -f1)
+LOCAL=$(git -C "$(dirname $0)" rev-parse @)
+REMOTE=$(git -C "$(dirname $0)" ls-remote origin -h refs/heads/master | cut -f1)
 
 if ! [ $LOCAL = $REMOTE ]; then
     echo "${red}${bold}You need to update $0!"
