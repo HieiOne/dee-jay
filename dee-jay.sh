@@ -2,7 +2,7 @@
 ##########################################################################################
 # Name: dee-jay <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 2.2/stable
+# Version: 2.2.1/stable
 # Description:
 #              AI plays music for you from given folder using cvlc(vlc)
 #	       To pause the reproduction just press 'CTRL+Z' to resume it you just have to type "%1" or the number terminal gives you
@@ -12,6 +12,25 @@
 #	       None found yet!
 ##########################################################################################
 source dee-jay.conf
+
+function updater {
+LOCAL=$(git rev-parse @)
+REMOTE=$(git ls-remote origin -h refs/heads/master | cut -f1)
+
+if ! [ $LOCAL = $REMOTE ]; then
+    echo "${red}${bold}You need to update $0!"
+    read -ep "Want to do it now? ${reset}" ANSWER
+    if [ $ANSWER = y ] || [ $ANSWER = Y]; then
+        git pull
+    else
+        exit 1
+    fi
+else
+    echo "${red}${bold}You have the latest available version!${reset}"
+    exit 0
+fi
+
+}
 
 function rmusic { #main function
 	clear
@@ -57,14 +76,16 @@ function menu { #menu function
 	echo "1.- Play random music from your default mp3 folder"
 	echo "2.- Choose a song from your default mp3 folder"
 	echo "3.- Choose a song from your default mp3 folder with name"
-	echo "4.- Exit" ; echo
+	echo "4.- Check for new updates"
+	echo "5.- Exit" ; echo
 	read -p "${yellow}Which option you want to choose: " OPTION
 	OPTION=$(echo $OPTION | sed 's/[^0-9]//g') #sed to remove non-number characters
 	case $OPTION in
 		1) SONG=$(find ${FOLDER[*]} -name "*.mp3" -type f | shuf -n1);AUTO=1;song "$SONG" "$AUTO" ;; #shuf chooses one randomly
 		2) select SONG in $(find ${FOLDER[*]} -name "*mp3" -type f);do song "$SONG";done ;; #selecting song with select statement
 		3) read -p "Name of song: " SEARCH;select SONG in $(find ${FOLDER[*]} -iname "*$SEARCH*mp3" -type f);do song "$SONG";done ;;
-		4) exit 0 ;;
+		4) updater ;;
+		5) exit 0 ;;
 		*) echo;echo "${bold}${red}Warning: option not supported${reset}" ; menu ;;
 	esac
 }
