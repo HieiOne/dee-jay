@@ -2,10 +2,12 @@
 ##########################################################################################
 # Name: dee-jay <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 2.1.10-rc/stable
+# Version: 2.1.11/stable
 # Description:
 #              AI plays music for you from given folder using cvlc(vlc)
 #	       To pause the reproduction just press 'CTRL+Z' to resume it you just have to type "%1" or the number terminal gives you
+#
+#	You can play random music all the time, if theres any you don't like, press arrow-keys or escape to skip it
 # Bugs:
 #	       None found yet!
 ##########################################################################################
@@ -14,6 +16,7 @@ red=`tput setaf 1`;reset=`tput sgr0`;yellow=`tput setaf 3`;bold=`tput bold` #add
 FOLDER=("/mnt/data/MUSICA") #Add your folders here (I find the files recursively if they are not in different places just mark the main one)
 			    #e.g FOLDER=("/mnt/data/MUSICA" "/mnt/data/MUSICA2")
 function rmusic { #main function
+	clear
 	cvlc -q "$1" 2>/dev/null &
 	echo;echo "${yellow}PLAYING $2"
 	TIME=0
