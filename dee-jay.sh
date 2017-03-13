@@ -21,7 +21,8 @@ if ! [ $LOCAL = $REMOTE ]; then
     echo "${red}${bold}You need to update $0!"
     read -ep "Want to do it now? ${reset}" ANSWER
     if [ $ANSWER = y ] || [ $ANSWER = Y]; then
-        git pull
+        git -C "$(dirname $0)" pull
+	exit 0
     else
         exit 1
     fi
