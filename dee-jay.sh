@@ -2,7 +2,7 @@
 ##########################################################################################
 # Name: dee-jay <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 2.1.11/stable
+# Version: 2.2/stable
 # Description:
 #              AI plays music for you from given folder using cvlc(vlc)
 #	       To pause the reproduction just press 'CTRL+Z' to resume it you just have to type "%1" or the number terminal gives you
@@ -11,10 +11,8 @@
 # Bugs:
 #	       None found yet!
 ##########################################################################################
-red=`tput setaf 1`;reset=`tput sgr0`;yellow=`tput setaf 3`;bold=`tput bold` #adding colors to the script
-#DEFAULT_CONFIG#
-FOLDER=("/mnt/data/MUSICA") #Add your folders here (I find the files recursively if they are not in different places just mark the main one)
-			    #e.g FOLDER=("/mnt/data/MUSICA" "/mnt/data/MUSICA2")
+source dee-jay.conf
+
 function rmusic { #main function
 	clear
 	cvlc -q "$1" 2>/dev/null &
