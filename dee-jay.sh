@@ -2,7 +2,7 @@
 ##########################################################################################
 # Name: dee-jay <rmusic>
 # Author: Hiei <blascogasconiban@gmail.com>
-# Version: 2.2.1/stable
+# Version: 2.3.1/stable
 # Description:
 #              AI plays music for you from given folder using cvlc(vlc)
 #	       To pause the reproduction just press 'CTRL+Z' to resume it you just have to type "%1" or the number terminal gives you
@@ -11,7 +11,7 @@
 # Bugs:
 #	       None found yet!
 ##########################################################################################
-source dee-jay.conf
+source "$(dirname $0)"dee-jay.conf
 
 function updater {
 LOCAL=$(git rev-parse @)
